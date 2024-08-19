@@ -1,3 +1,4 @@
+#if os(macOS) || os(Linux)
 import Foundation
 
 struct TaskRunner: TaskRunnerProtocol {
@@ -20,3 +21,4 @@ struct TaskRunner: TaskRunnerProtocol {
         return TaskRunnerOutput(output: outputString, terminationStatus: task.terminationStatus)
     }
 }
+#endif
