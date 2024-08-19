@@ -51,7 +51,7 @@ public struct DLOpenFlags: RawRepresentable, OptionSet {
         public static let deepBind: DLOpenFlags = DLOpenFlags(rawValue: 0)
     #else
         public static let first: DLOpenFlags = DLOpenFlags(rawValue: 0)
-        public static let deepBind: DLOpenFlags = DLOpenFlags(rawValue: RTLD_DEEPBIND)
+        public static let deepBind: DLOpenFlags = DLOpenFlags(rawValue: RTLD_NOW)
     #endif
 
     public var rawValue: Int32
