@@ -41,21 +41,30 @@ class SourceKit {
         case missingRequiredSymbol(String)
     }
 
-    static func getToolchainPath() -> String {
-        let task = Process()
-        task.launchPath = "/bin/bash"
-        task.arguments = ["-c", "xcode-select -p"]
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.launch()
+#if os(macOS)
+
+static func getToolchainPath() -> String {
+    let task = Process()
+    task.executableURL = URL(fileURLWithPath: "/bin/bash")
+    task.arguments = ["-c", "xcode-select -p"]
+    
+    let pipe = Pipe()
+    task.standardOutput = pipe
+    
+    do {
+        try task.run()
         task.waitUntilExit()
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         guard let developer = String(data: data, encoding: .utf8), developer.isEmpty == false else {
             preconditionFailure("Xcode toolchain path not found. (xcode-select -p)")
         }
-        let oneLined = developer.replacingOccurrences(of: "\n", with: "")
+        let oneLined = developer.trimmingCharacters(in: .whitespacesAndNewlines)
         return oneLined + "/Toolchains/XcodeDefault.xctoolchain/usr/lib/sourcekitd.framework/sourcekitd"
+    } catch {
+        preconditionFailure("Failed to run the task: \(error)")
     }
+}
+#endif
 
     public init(logger: LoggerProtocol?) {
         self.logger = logger
