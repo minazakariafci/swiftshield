@@ -64,6 +64,14 @@ static func getToolchainPath() -> String {
         preconditionFailure("Failed to run the task: \(error)")
     }
 }
+#else
+
+    static func getToolchainPath() -> String {
+        // Provide a no-op or alternative implementation
+        return ("Error")
+    }
+
+
 #endif
 
     public init(logger: LoggerProtocol?) {
